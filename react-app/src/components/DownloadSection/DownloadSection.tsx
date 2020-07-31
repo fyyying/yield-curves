@@ -1,11 +1,37 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, useEffect } from "react";
 import ReactGA from "react-ga";
 import { MonthPicker } from "../MonthPicker/MonthPicker";
-import { defaultCountries } from "../../assets/sampleData"
+import { defaultCountries } from "../../assets/sampleData";
 
-export const SelectMenu: FC = () => {
+export const DownloadSection: FC = () => {
   // List of countries from the EIOPA curves and its corresponding country code for filtering
+  const [countries, setCountries] = useState(defaultCountries);
 
+  useEffect(() => {
+    // Define asynchronous function - since useEffect hook can't handle async directly,
+    // a nested function needs to be defined first and then called thereafter
+    const fetchData = async () => {
+      try {
+        // Fetch data from REST API
+        // for local testing replace with http://localhost:7071/api
+        const response = await fetch("http://localhost:7071/config?id=countries");
+
+        if (response.status === 200) {
+          // const message = await response.json();
+          // Extract json
+          const data: { PartitionKey: string; RowKey: string; countries: typeof countries } = await response.json();
+
+          setCountries(data.countries);
+        } else {
+          console.error("Couldn't reach server");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    // Call async function
+    fetchData();
+  }, []);
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedCountry, setSelectedCountry] = useState("United Kingdom");
