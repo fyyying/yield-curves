@@ -3,9 +3,15 @@ import ReactGA from "react-ga";
 import { MonthPicker } from "../MonthPicker/MonthPicker";
 import { defaultCountries } from "../../assets/sampleData";
 
-export const DownloadSection: FC = () => {
+interface DownloadSectionProps {
+  title: string;
+  subtitle: string;
+}
+
+export const DownloadSection: FC<DownloadSectionProps> = ({ title, subtitle }) => {
   // List of countries from the EIOPA curves and its corresponding country code for filtering
   const [countries, setCountries] = useState(defaultCountries);
+  type countryType = typeof countries;
 
   useEffect(() => {
     // Define asynchronous function - since useEffect hook can't handle async directly,
@@ -19,7 +25,7 @@ export const DownloadSection: FC = () => {
         if (response.status === 200) {
           // const message = await response.json();
           // Extract json
-          const data: { PartitionKey: string; RowKey: string; countries: typeof countries } = await response.json();
+          const data: { PartitionKey: string; RowKey: string; countries: countryType } = await response.json();
 
           setCountries(data.countries);
         } else {
@@ -41,9 +47,9 @@ export const DownloadSection: FC = () => {
     <div className="bg-gray-50">
       <div className="left-0 max-w-screen-xl px-4 py-12 mx-auto sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between">
         <h2 className="text-2xl font-extrabold leading-9 tracking-tight text-gray-900 sm:text-3xl sm:leading-10">
-          Download cleaned risk free EIOPA rates here:
+          {title}
           <br />
-          <span className="text-teal-500">Pick a month and currency</span>
+          <span className="text-teal-500">{subtitle}</span>
         </h2>
         <div className="flex flex-col flex-wrap h-48 align-bottom md:h-auto md:flex-row lg:w-2/5 justify-evenly">
           <div style={{ maxWidth: 100 }} className="mb-1 md:self-end">

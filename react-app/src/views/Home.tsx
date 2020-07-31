@@ -177,7 +177,7 @@ export const Home: FC = () => {
 
       {/* <Pricing /> */}
 
-      <DownloadSection />
+      <DownloadSection title="Download cleaned risk free EIOPA rates here:" subtitle="Pick a month and currency" />
 
       <SubscriptionSection />
 
